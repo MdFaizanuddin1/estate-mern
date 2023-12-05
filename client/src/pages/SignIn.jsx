@@ -1,11 +1,19 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
 
 function SignIn() {
   const [formData, setformData] = useState({});
-  const [error, setError] = useState(null);
-  const [loading, setloading] = useState(false);
+  const { error, loading } = useSelector((state) => state.user);
   const navigate = useNavigate();
+
+  //reducx steps
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setformData({
@@ -18,7 +26,7 @@ function SignIn() {
     e.preventDefault();
 
     try {
-      setloading(true);
+      dispatch(signInStart());
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
@@ -31,18 +39,14 @@ function SignIn() {
       console.log(data);
 
       if (data.success === false) {
-        setloading(false);
-        setError(data.message);
-
+        dispatch(signInFailure(data.message));
         return;
       } else {
-        setloading(false);
-        setError(null);
+        dispatch(signInSuccess(data));
         navigate("/");
       }
     } catch (error) {
-      setloading(false);
-      setError(error.message);
+      dispatch(signInFailure(error.message));
     }
   };
 
@@ -50,7 +54,6 @@ function SignIn() {
     <div className="p-3 max-w-lg mx-auto">
       <h1 className=" text-3xl text-center font-semibold my-7">Sign In</h1>
       <form onSubmit={hadleSubmit} className="flex flex-col gap-4">
-        
         <input
           type="email"
           placeholder="email"
