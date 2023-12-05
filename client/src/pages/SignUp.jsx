@@ -19,7 +19,7 @@ function SignUp() {
 
     try {
       setloading(true);
-      const res = await fetch("/api/auth/singup", {
+      const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
