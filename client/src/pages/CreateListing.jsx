@@ -7,7 +7,7 @@ import {
 } from "firebase/storage";
 import { app } from "../fireBase";
 import { useSelector } from "react-redux";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 export default function CreateListing() {
   const navigate = useNavigate();
@@ -153,7 +153,7 @@ export default function CreateListing() {
       if (data.success === false) {
         setError(data.message);
       }
-      navigate(`/listing/${data._id}`)
+      navigate(`/listing/${data._id}`);
     } catch (error) {
       setError(error.message);
       setLoading(false);
@@ -290,7 +290,9 @@ export default function CreateListing() {
               />
               <div className=" flex flex-col text-center">
                 <p>Regular Price</p>
-                <span className=" text-xs">($ /month)</span>
+                {formData.type === "rent" && (
+                  <span className="text-xs">($ / month)</span>
+                )}
               </div>
             </div>
             {formData.offer && (
@@ -307,7 +309,9 @@ export default function CreateListing() {
                 />
                 <div className=" flex flex-col text-center">
                   <p>Discounted price</p>
-                  <span className=" text-xs">($ /month)</span>
+                  {formData.type === "rent" && (
+                    <span className="text-xs">($ / month)</span>
+                  )}
                 </div>
               </div>
             )}
@@ -362,7 +366,10 @@ export default function CreateListing() {
                 </button>
               </div>
             ))}
-          <button disabled={loading || uploding} className=" p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80">
+          <button
+            disabled={loading || uploding}
+            className=" p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+          >
             {loading ? "Creating" : "Create listing"}
           </button>
           {error && <p className=" text-red-700 text-sm">{error}</p>}
